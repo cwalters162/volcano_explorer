@@ -1,23 +1,11 @@
-// Import the express in typescript file
 import express from 'express';
 
-// Initialize the express engine
-const app: express.Application = express();
+const app = express();
 
-// Take a port 3000 for running server.
-const port: number = 3000;
-
-// Handling '/' Request
-app.get('/', (_req, _res) => {
-    _res.send("TypeScript With Express");
+app.get('/', async (_req, res) => {
+    res.send("<h1>I'm alive!</h1>")
 });
 
-app.get('/hello', (_req, _res) => {
-    _res.send(" With hello World162");
-});
-
-// Server setup
-app.listen(port, () => {
-    console.log(`TypeScript with Express
-         http://localhost:${port}/`);
+app.listen(3000, () => {
+    console.log('Server listening on port 3000');
 });

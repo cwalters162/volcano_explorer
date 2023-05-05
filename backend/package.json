@@ -1,22 +1,20 @@
 {
-  "name": "volcano_exploration_backend",
+  "name": "volcano_exploration_server",
   "version": "1.0.0",
-  "description": "The API to play the game!",
+  "description": "Provides the webAPI for the game",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch ./src/server.ts"
+  },
   "author": "",
   "license": "ISC",
-  "main": "src/server.ts",
-  "type": "module",
-  "scripts": {
-    "build": "tsc",
-    "dev": "node --watch dist/server.js"
+  "devDependencies": {
+    "tsx": "^3.12.7",
+    "typescript": "^5.0.4"
   },
   "dependencies": {
-    "express": "^4.18.2"
-  },
-  "devDependencies": {
     "@types/express": "^4.17.17",
-    "@types/node": "^18.16.3",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "express": "^4.18.2"
   }
 }
