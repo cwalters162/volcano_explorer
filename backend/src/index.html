@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Volcano Exploration</title>
+</head>
+<body>
+    <h1>Volcano Exploration</h1>
+    <h2>Endpoints</h2>
+    <h3>/new-game/:difficulty/</h3>
+        <p>Difficulty: easy, medium, hard</p>
+    <h3>/move/:direction</h3>
+        <p>Direction: up, down, left, right</p>
+    <h3>/player/</h3>
+        <p>Returns the health and moves remaining from the player</p>
+    <h3>/map/</h3>
+        <p>Returns the map with the player location</p>
+        <p>Uses traditional ASCII characters for identification</p>
+        <p>'@' is the player</p>
+        <p>'.' is a blank tile</p>
+        <p>'S' is a speeder tile</p>
+        <p>'L' is a lava tile</p>
+        <p>'M' is a mud tile</p>
+        <p>'H' is the start tile</p>
+        <p>'X' is the end tile</p>
+
+    <h3>/world-status/</h3>
+        <p>Returns a JSON with the current world, player, and difficulty.</p>
+        <p>To be used with a custom frontend for a complete game stats.</p>
+        <p>Game can be played completely via HTTP endpoints without ever using this.</p>
+</body>
+</html>
