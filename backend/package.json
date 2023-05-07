@@ -2,7 +2,7 @@
   "name": "volcano_exploration_server",
   "version": "1.0.0",
   "description": "Provides the webAPI for the game",
-  "main": "src/server.js",
+  "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch ./src/server.ts"
