@@ -1,10 +1,10 @@
-import express, {NextFunction, Request, Response} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import * as path from "path";
-import {generateGrid, renderWorld} from "./Map/Grid";
-import {TTile} from "./Map/Tile";
+import { generateGrid } from "./Map/Grid";
 import {createPlayer, getEndLocation} from "./Player/Player";
-
-const app = express();
+import app from "./app";
+import PlayerRouter from "./Routes/PlayerRouter";
+import MapRouter from "./Routes/MapRouter";
 
 // MIDDLEWARE SECTION
 
@@ -29,7 +29,7 @@ function checkStatus (_req: Request, res: Response, next: NextFunction): void {
 
 // ROUTE SECTION
 
-app.get('/', (_req, res) => {
+app.all('/', (_req, res) => {
     res.sendFile("./index.html", {root: path.join(__dirname, '.')})
 });
 
@@ -54,58 +54,9 @@ app.get('/new-game/:difficulty', (req, res) => {
 
 app.use(checkStatus)
 
-app.get('/move/:direction', (req, res) => {
-    let direction = req.params.direction.toLowerCase()
-    let result: string = ''
-    const world: TTile[][] = app.locals.world
-    switch (direction) {
-        case "up":  { result = app.locals.player.moveUp(world)} break
-        case "down":  { result = app.locals.player.moveDown(world)} break
-        case "left":  { result = app.locals.player.moveLeft(world)} break
-        case "right":  { result = app.locals.player.moveRight(world)} break
-        default: res.status(400).send("<h1>Invalid direction</h1>" + "<h2>Please only use up, down, left, right</h2>")
-    }
-    if (result == "failure") {
-        res.status(400).send("<h1>Unable to move that direction</h1>" + "<h2>Please ensure to not move out of bounds</h2>")
-    } else if (result == "success") {
-        res.status(200).send("<h1>Successfully moved!</h1>" + `<h2>New location is X: ${app.locals.player.location.x}. Y: ${app.locals.player.location.y}</h2>`)
-    }
-});
+app.use('/player', PlayerRouter)
 
-app.get('/player', (_req, res) => {
-    const player_health = app.locals.player.health
-    const player_moves = app.locals.player.moves
-    const player_x = app.locals.player.location.x
-    const player_y = app.locals.player.location.y
-
-    res.status(200).send(
-        "<h1>Player Information<h1>" +
-        `<p>Health: ${player_health}</p>` +
-        `<p>Moves: ${player_moves}</p>` +
-        `<p>Location: X: ${player_x}. Y: ${player_y}</p>`
-    )
-});
-
-app.get('/map', (_req, res) => {
-
-    try {
-        const player = app.locals.player
-        const world = app.locals.world
-        res.status(200).send(renderWorld(player, world))
-    } catch (error) {
-        res.status(500).send("<h1>Map failed to be created!</h1>" +
-            "<h2>Please contact the server administrator</h2>" +
-            `Error: ${error}`)
-    }
-});
-
-// app.get('/help', (_req, _res) => {
-//
-// })
-
-// app.get('/world-status', (_req, _res) => {
-//
-// });
+app.use('/map', MapRouter)
 
 app.listen(3000, () => {
     const world = app.locals.world = generateGrid("medium")
