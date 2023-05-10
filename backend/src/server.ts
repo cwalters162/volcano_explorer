@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response} from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import * as path from "path";
 import {generateGrid, renderWorld, replaceWorldPathWithPounds} from "./Map/Grid";
 import {autoMovePlayer, createPlayer, getEndLocation, getStartLocation, Player} from "./Player/Player";
@@ -7,6 +7,9 @@ import PlayerRouter from "./Routes/PlayerRouter";
 import MapRouter from "./Routes/MapRouter";
 import {aStar} from "./PathFinding";
 import {TTile} from "./Map/Tile";
+import {FQDN, NODE_ENV} from "./config";
+import * as https from "https";
+import * as fs from "fs";
 
 // MIDDLEWARE SECTION
 
@@ -43,7 +46,7 @@ app.get('/new-game/:difficulty', (req, res) => {
             const world = app.locals.world = generateGrid(difficulty)
             app.locals.player = createPlayer(difficulty, world)
             res.status(200).send("<h1>Game created successfully!</h1>" +
-                "<h2>Please check /help for assistance on how to play!</h2>")
+                "<h2>Please check / for assistance on how to play!</h2>")
         }
         else {
             res.status(400).send("<h1>Please only use easy/medium/hard for the difficulty.</h1>")
@@ -118,8 +121,31 @@ app.get('/api/world', (_req, res) => {
     res.json(game_state)
 })
 
-app.listen(3000, () => {
+if (NODE_ENV === 'development') {
+    app.listen(3000, '0.0.0.0', () => {
+        const world = app.locals.world = generateGrid("medium")
+        app.locals.player = createPlayer("medium", world)
+        console.log(`HTTP Development Server listening on port 3000`);
+    });
+}
+
+
+
+if (NODE_ENV === 'production') {
+    const httpApp = express();
+    httpApp.all('*', (_req, res) => res.redirect(`https://${FQDN}`));
+    httpApp.listen(80, () => {
+        console.log(`HTTP server listening: http://${FQDN}`)
+    })
+
+    https.createServer({
+            cert: fs.readFileSync('fullchain.pem'),
+            key: fs.readFileSync('privkey.pem'),
+        },
+        app
+    ).listen(443, '0.0.0.0');
+
     const world = app.locals.world = generateGrid("medium")
     app.locals.player = createPlayer("medium", world)
-    console.log('Server listening on port 3000');
-});
+    console.log(`HTTPS Server listening on https://${FQDN}${443}`)
+}
