@@ -92,3 +92,19 @@ export function createPlayer(difficulty: string, world: TTile[][]): Player {
 
     return new Player(health, moves, location)
 }
+
+export function autoMovePlayer(player: Player, path: TTile[], world: TTile[][]) {
+    path.map( tile => {
+        if (tile.x > player.location.x) {
+            player.moveDown(world)
+        } else if (tile.x < player.location.x) {
+            player.moveUp(world)
+        } else if (tile.y > player.location.y) {
+            player.moveRight(world)
+        } else if (tile.y < player.location.y) {
+            player.moveLeft(world)
+        } else {
+            console.log("Same location")
+        }
+    })
+}

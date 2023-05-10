@@ -1,5 +1,5 @@
 import {createTile, EndTile, StartTile, TTile} from "./Tile";
-import {Player} from "../Player/Player";
+import {Player, TPos} from "../Player/Player";
 
 export function generateGrid(difficulty: string): TTile[][] {
     let size = 50
@@ -14,12 +14,39 @@ export function generateGrid(difficulty: string): TTile[][] {
     for (let row = 0; row < size; row++){
         new_array.push([])
         for (let col = 0; col < size; col++) {
-            new_array[row].push(createTile())
+            new_array[row].push(createTile(row, col))
         }
     }
-    new_array[0][Math.floor(Math.random() * size)] = new StartTile()
-    new_array[size - 1][Math.floor(Math.random() * size)] = new EndTile()
+    const start_y = Math.floor(Math.random() * size)
+    new_array[0][start_y] = new StartTile(0, start_y)
+    const end_y = Math.floor(Math.random() * size)
+    new_array[size - 1][end_y] = new EndTile(size - 1, end_y)
+    addNeighbors(new_array)
     return new_array
+}
+
+function addNeighbors(grid: TTile[][]) {
+    for (let x = 0; x < grid.length; x++) {
+        for (let y = 0; y < grid[x].length; y++) {
+            const tile = grid[x][y];
+            const neighbors: TPos[] = [];
+
+            if (x > 0) {
+                neighbors.push({x: x - 1, y: y});
+            }
+            if (x < grid.length - 1) {
+                neighbors.push({x: x + 1, y: y});
+            }
+            if (y > 0) {
+                neighbors.push({x: x, y: y - 1});
+            }
+            if (y < grid[x].length - 1) {
+                neighbors.push({x: x, y: y + 1});
+            }
+
+            tile.neighbors = neighbors;
+        }
+    }
 }
 
 export function renderWorld(player: Player, world: TTile[][]): string[] {
@@ -33,4 +60,17 @@ export function renderWorld(player: Player, world: TTile[][]): string[] {
             }
         }).join('')
     })
+}
+
+export function replaceWorldPathWithPounds(world: TTile[][], path: TTile[]) {
+    let modified_world = world;
+    path.map( path_tile=> {
+        modified_world.map((row: TTile[]) => row.map( (tile: TTile) => {
+            if (path_tile === tile) {
+                tile.symbol = '#'
+                return
+            }
+        }))
+    })
+    return modified_world
 }

@@ -1,10 +1,12 @@
 import {NextFunction, Request, Response} from 'express';
 import * as path from "path";
-import { generateGrid } from "./Map/Grid";
-import {createPlayer, getEndLocation} from "./Player/Player";
+import {generateGrid, renderWorld, replaceWorldPathWithPounds} from "./Map/Grid";
+import {autoMovePlayer, createPlayer, getEndLocation, getStartLocation, Player} from "./Player/Player";
 import app from "./app";
 import PlayerRouter from "./Routes/PlayerRouter";
 import MapRouter from "./Routes/MapRouter";
+import {aStar} from "./PathFinding";
+import {TTile} from "./Map/Tile";
 
 // MIDDLEWARE SECTION
 
@@ -52,11 +54,69 @@ app.get('/new-game/:difficulty', (req, res) => {
     }
 });
 
+app.get('/solve', (_req, res) => {
+    const world = app.locals.world
+    const player = app.locals.player
+    const start_location = getStartLocation(world)
+    const end_location = getEndLocation(world)
+    const start_tile = world[start_location.x][start_location.y]
+    const end_tile = world[end_location.x][end_location.y]
+
+    const path = aStar(start_tile, end_tile, world)
+    autoMovePlayer(player, path, world)
+    replaceWorldPathWithPounds(world, path)
+    res.send(renderWorld(player, world))
+})
+
 app.use(checkStatus)
 
 app.use('/player', PlayerRouter)
 
 app.use('/map', MapRouter)
+
+
+app.get('/solve-until-win/:difficulty', (req, res) => {
+    const difficulty= req.params.difficulty.toLowerCase()
+    let isLoss = true
+    let world: TTile[][]
+    let player: Player
+    try {
+        if (difficulty == "easy" || difficulty == "medium" || difficulty == "hard") {
+            while (isLoss) {
+                world = app.locals.world = generateGrid(difficulty)
+                player = app.locals.player = createPlayer(difficulty, world)
+
+                const start_location = getStartLocation(world)
+                const end_location = getEndLocation(world)
+                const start_tile = world[start_location.x][start_location.y]
+                const end_tile = world[end_location.x][end_location.y]
+
+                const path = aStar(start_tile, end_tile, world)
+                autoMovePlayer(player, path, world)
+                if (player.health >= 1 || player.moves >= 1) {
+                    isLoss = false
+                    replaceWorldPathWithPounds(world, path)
+                    res.send(renderWorld(player, world))
+                    break
+                }
+
+            }
+        }
+        else {
+            res.status(400).send("<h1>Please only use easy/medium/hard for the difficulty.</h1>")
+        }
+    } catch {
+        res.status(500).send("<h1>Map failed to be created!</h1>" +
+            "<h2>Please contact the server administrator</h2>")
+    }
+})
+
+app.get('/api/world', (_req, res) => {
+    const world = app.locals.world
+    const player = app.locals.player
+    const game_state = { world: world, player: player}
+    res.json(game_state)
+})
 
 app.listen(3000, () => {
     const world = app.locals.world = generateGrid("medium")

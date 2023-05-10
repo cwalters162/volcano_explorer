@@ -1,5 +1,5 @@
 {
-  "name": "volcano_exploration_server",
+  "name": "volcano_explorer",
   "version": "1.0.0",
   "description": "Provides the webAPI for the game",
   "main": "src/server.ts",
@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "ts-node": "^10.9.1",
     "tsx": "^3.12.7",
     "typescript": "^5.0.4"
   },

@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Volcano Exploration</title>
+    <title>Volcano Explorer</title>
 </head>
 <body>
-    <h1>Volcano Exploration</h1>
+    <h1>Volcano Explorer</h1>
     <h2>Endpoints</h2>
     <h3>/new-game/:difficulty/</h3>
         <p>Difficulty: easy, medium, hard</p>
-    <h3>/move/:direction</h3>
-        <p>Direction: up, down, left, right</p>
     <h3>/player/</h3>
         <p>Returns the health and moves remaining from the player</p>
+    <h3>/player/move/:direction</h3>
+        <p>Direction: up, down, left, right</p>
     <h3>/map/</h3>
         <p>Returns the map with the player location</p>
         <p>Uses traditional ASCII characters for identification</p>
@@ -24,8 +24,16 @@
         <p>'H' is the start tile</p>
         <p>'X' is the end tile</p>
 
-    <h3>/world-status/</h3>
-        <p>Returns a JSON with the current world, player, and difficulty.</p>
+    <h3>/solve</h3>
+    <p>finds the shortest path from the start point to the end point.</p>
+    <p>Currently does not take health/moves into account</p>
+
+    <h3>/solve-until-win/:difficulty</h3>
+        <p>Keeps generating a new map and solves the map until the player wins.</p>
+        <p>It then responds with the winning map</p>
+
+    <h3>/api/world/</h3>
+        <p>Returns a JSON with the current world, player.</p>
         <p>To be used with a custom frontend for a complete game stats.</p>
         <p>Game can be played completely via HTTP endpoints without ever using this.</p>
 </body>
