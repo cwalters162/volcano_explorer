@@ -1,5 +1,29 @@
 # Volcano Explorer Backend
 
+# Development
+
+Set node_env to "development"
+
+run npm install
+
+run npm run dev
+
+# Production
+
+npm run build
+
+ftp the build files to the server you wish to host on and run the following commands.
+
+Set node_env to "production"
+
+Set fqdn to "yourefqdn.com"
+
+`npm install express`
+
+cd into the directory you placed the build files.
+
+`node ./server.js`
+
 ## Endpoints
 
 - `/new-game/:difficulty/`

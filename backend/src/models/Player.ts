@@ -1,5 +1,7 @@
-import {getStartLocation, TPos} from "./Grid";
+import {TPos} from "../services/GridMapService";
 import {TTile} from "./Tile";
+import TileService from "../services/TileService";
+import GridMapService from "../services/GridMapService";
 
 export class Player {
     health: number
@@ -57,9 +59,10 @@ export class Player {
 
 
 export function createPlayer(difficulty: string, world: TTile[][]): Player {
+    let gridMapService = new GridMapService(new TileService())
     let health = 250
     let moves = 450
-    const location = getStartLocation(world)
+    const location = gridMapService.getStartLocation(world)
 
     switch (difficulty) {
         case "easy": { health = 300; moves = 500; break }

@@ -1,5 +1,5 @@
 import app from "../app";
-import {renderWorld} from "../model/Grid";
+import {renderWorld} from "../models/Grid";
 import {Request, Response} from "express";
 
 const express = require('express')
