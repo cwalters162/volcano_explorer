@@ -1,5 +1,6 @@
-import {TTile} from "./model/Tile"
-import {TPos} from "./model/Player"
+import {TPos} from "./model/Grid";
+import {TTile} from "./model/Tile";
+import {Player} from "./model/Player";
 
 export type Graph = {
     [key: string]: TPos[]
@@ -73,4 +74,20 @@ export function aStar(start: TTile, end: TTile, world: TTile[][]): TTile[] {
         }
     }
     return []
+}
+
+export function autoMovePlayer(player: Player, path: TTile[], world: TTile[][]) {
+    path.map( tile => {
+        if (tile.x > player.location.x) {
+            player.moveDown(world)
+        } else if (tile.x < player.location.x) {
+            player.moveUp(world)
+        } else if (tile.y > player.location.y) {
+            player.moveRight(world)
+        } else if (tile.y < player.location.y) {
+            player.moveLeft(world)
+        } else {
+            console.log("Same location")
+        }
+    })
 }
