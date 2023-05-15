@@ -1,5 +1,5 @@
-import {TTile} from "./Map/Tile"
-import {TPos} from "./Player/Player"
+import {TTile} from "./model/Tile"
+import {TPos} from "./model/Player"
 
 export type Graph = {
     [key: string]: TPos[]

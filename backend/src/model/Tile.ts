@@ -1,4 +1,4 @@
-import {TPos} from "../Player/Player";
+import {TPos, TTile} from "./types";
 
 export enum TileType {
     Blank,

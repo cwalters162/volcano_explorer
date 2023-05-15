@@ -1,12 +1,12 @@
 import express, {NextFunction, Request, Response} from 'express';
 import * as path from "path";
-import {generateGrid, renderWorld, replaceWorldPathWithPounds} from "./Map/Grid";
-import {autoMovePlayer, createPlayer, getEndLocation, getStartLocation, Player} from "./Player/Player";
+import {generateGrid, renderWorld, replaceWorldPathWithPounds} from "./model/Grid";
+import {autoMovePlayer, createPlayer, getEndLocation, getStartLocation, Player} from "./model/Player";
 import app from "./app";
 import PlayerRouter from "./Routes/PlayerRouter";
 import MapRouter from "./Routes/MapRouter";
 import {aStar} from "./PathFinding";
-import {TTile} from "./Map/Tile";
+import {TTile} from "./model/Tile";
 import {FQDN, NODE_ENV} from "./config";
 import * as https from "https";
 import * as fs from "fs";
@@ -120,6 +120,7 @@ app.get('/api/world', (_req, res) => {
     const game_state = { world: world, player: player}
     res.json(game_state)
 })
+
 if (NODE_ENV === 'development') {
     app.listen(3000, '0.0.0.0', () => {
         const world = app.locals.world = generateGrid("medium")

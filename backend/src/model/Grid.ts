@@ -1,5 +1,10 @@
-import {createTile, EndTile, StartTile, TTile} from "./Tile";
-import {Player, TPos} from "../Player/Player";
+import {createTile, EndTile, StartTile, TileType, TTile} from "./Tile";
+import {Player} from "./Player";
+
+export type TPos = {
+    x: number
+    y: number
+}
 
 export function generateGrid(difficulty: string): TTile[][] {
     let size = 50
@@ -23,6 +28,17 @@ export function generateGrid(difficulty: string): TTile[][] {
     new_array[size - 1][end_y] = new EndTile(size - 1, end_y)
     addNeighbors(new_array)
     return new_array
+}
+
+export function getStartLocation(world: TTile[][]): TPos {
+    const y: number = world[0].findIndex((tile) => tile.type == TileType.Start)
+    return {x: 0, y: y}
+}
+
+export function getEndLocation(world: TTile[][]): TPos {
+    const end_row = world.length - 1
+    const y: number = world[end_row].findIndex((tile) => tile.type == TileType.End)
+    return {x: end_row, y: y}
 }
 
 function addNeighbors(grid: TTile[][]) {

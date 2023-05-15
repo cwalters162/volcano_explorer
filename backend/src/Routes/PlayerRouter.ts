@@ -1,7 +1,7 @@
 import app from "../app";
 import {Request, Response} from "express";
-import {TTile} from "../Map/Tile";
-import {renderWorld} from "../Map/Grid";
+import {TTile} from "../model/Tile";
+import {renderWorld} from "../model/Grid";
 
 const express = require('express')
 const router = express.Router()

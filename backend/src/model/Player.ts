@@ -1,18 +1,5 @@
-// PLAYER SECTION
-
-import {TileType, TTile} from "../Map/Tile";
-
-export type TPos = {
-    x: number
-    y: number
-}
-
-type TPlayer = {
-    health: number
-    moves: number
-    location: TPos
-    symbol: string
-}
+import {getStartLocation, TPos} from "./Grid";
+import {TTile} from "./Tile";
 
 export class Player implements TPlayer {
     health: number
@@ -67,16 +54,7 @@ export class Player implements TPlayer {
     }
 }
 
-export function getStartLocation(world: TTile[][]): TPos {
-    const y: number = world[0].findIndex((tile) => tile.type == TileType.Start)
-    return {x: 0, y: y}
-}
 
-export function getEndLocation(world: TTile[][]): TPos {
-    const end_row = world.length - 1
-    const y: number = world[end_row].findIndex((tile) => tile.type == TileType.End)
-    return {x: end_row, y: y}
-}
 
 export function createPlayer(difficulty: string, world: TTile[][]): Player {
     let health = 250
