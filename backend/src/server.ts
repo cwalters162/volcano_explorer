@@ -120,7 +120,6 @@ app.get('/api/world', (_req, res) => {
     const game_state = { world: world, player: player}
     res.json(game_state)
 })
-
 if (NODE_ENV === 'development') {
     app.listen(3000, '0.0.0.0', () => {
         const world = app.locals.world = generateGrid("medium")
@@ -129,8 +128,6 @@ if (NODE_ENV === 'development') {
     });
 }
 
-
-
 if (NODE_ENV === 'production') {
     const httpApp = express();
     httpApp.all('*', (_req, res) => res.redirect(`https://${FQDN}`));
@@ -138,14 +135,18 @@ if (NODE_ENV === 'production') {
         console.log(`HTTP server listening: http://${FQDN}`)
     })
 
-    https.createServer({
-            cert: fs.readFileSync('fullchain.pem'),
-            key: fs.readFileSync('privkey.pem'),
-        },
-        app
-    ).listen(443, '0.0.0.0');
+    try {
+        https.createServer({
+                cert: fs.readFileSync('fullchain.pem'),
+                key: fs.readFileSync('privkey.pem'),
+            },
+            app
+        ).listen(443, '0.0.0.0');
 
-    const world = app.locals.world = generateGrid("medium")
-    app.locals.player = createPlayer("medium", world)
-    console.log(`HTTPS Server listening on https://${FQDN}${443}`)
+        const world = app.locals.world = generateGrid("medium")
+        app.locals.player = createPlayer("medium", world)
+        console.log(`HTTPS Server listening on https://${FQDN}${443}`)
+    } catch (e) {
+        console.log(`HTTPS Server failed to start: ${e}`)
+    }
 }
