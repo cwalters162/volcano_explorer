@@ -7,15 +7,27 @@ import {FQDN, NODE_ENV} from "./configs/envConfig";
 import * as fs from "fs";
 import * as https from "https";
 import UserRouter from "./routes/UserRouter";
+import SESSION_OPTIONS from "./configs/SessionOptions";
+import session from "express-session";
+import User from "./models/User";
+import {isAuthenticated} from "./middleware/Auth";
 
-// ROUTE SECTION
+declare module 'express-session' {
+    interface SessionData {
+        user: User | null
+    }
+}
+
 app.use(express.json())
+app.use(session(SESSION_OPTIONS))
 
 app.all('/', (_req, res) => {
     res.sendFile("./index.html", {root: path.join(__dirname, '.')})
 });
 
 app.use("/user", UserRouter)
+
+app.use(isAuthenticated)
 
 if (NODE_ENV === "development") {
     app.listen(3000, '0.0.0.0', () => {

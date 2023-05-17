@@ -1,25 +1,25 @@
 import app from "../app";
 import {Request, Response} from "express";
-import UserController from "../controllers/UserController";
+import UserController, {ZCreateUserSchema} from "../controllers/UserController";
+import User from "../models/User";
 
 const express = require('express')
 const UserRouter = express.Router()
 
-UserRouter.post("/", (req: Request, res: Response) => {
+UserRouter.post("/", async (req: Request, res: Response) => {
     const db = app.locals.db
     const userController = new UserController(db)
     try {
-        let success = userController.createUser(req.body)
+        const user: User = ZCreateUserSchema.parse(req.body) as User
+        let success = userController.createUser(user)
         res.status(200).json(success)
-    } catch {
-        res.status(500).json({error: "broken"})
+    } catch (error) {
+        res.status(400).json({error: error})
     }
 })
 
-// UserRouter.post("/login", (_req: Request, _res: Response) => {
-//     respons
+// UserRouter.post("/login", (req: Request, _res: Response) => {
+//     const success = AuthController.loginUser(req.body)
 // })
-
-UserRouter.get
 
 export default UserRouter

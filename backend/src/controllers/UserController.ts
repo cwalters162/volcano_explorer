@@ -2,6 +2,7 @@ import UserService from "../services/UserService";
 import {IDatabaseRepository} from "../configs/DatabaseConfig";
 import User from "../models/User";
 import MockDBRepository from "../repositories/mockDBRepository";
+import {z} from "zod";
 
 interface IUserController {
     createUser(body: User): User
@@ -17,9 +18,14 @@ class UserController implements IUserController {
     }
 
 
-    createUser(body: User): User {
-        return this.userService.createUser(body.name, body.password)
+    createUser(user: User): User {
+        return this.userService.createUser(user.name, user.password)
     }
 }
+export const ZCreateUserSchema = z.object({
 
+    name: z.string(),
+    password: z.string(),
+
+})
 export default UserController
