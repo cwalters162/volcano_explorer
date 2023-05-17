@@ -1,16 +1,23 @@
-import {NODE_ENV} from "./envConfig";
+import {NODE_ENV, SESSION_SECRET} from "./envConfig";
 import {SessionOptions} from "express-session";
+import User from "../models/User";
+
+declare module 'express-session' {
+    interface SessionData {
+        user: User | null
+    }
+}
 
 function getSessionOptions(): SessionOptions {
     if (NODE_ENV === "development") {
         return {
-            secret: 'keyboard cat',
+            secret: SESSION_SECRET,
             resave: false,
             saveUninitialized: true
         }
     } else {
         return {
-            secret: 'keyboard cat',
+            secret: SESSION_SECRET,
             resave: false,
             saveUninitialized: true
         }

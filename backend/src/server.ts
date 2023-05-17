@@ -6,17 +6,13 @@ import MockDBRepository from "./repositories/mockDBRepository";
 import {FQDN, NODE_ENV} from "./configs/envConfig";
 import * as fs from "fs";
 import * as https from "https";
-import UserRouter from "./routes/UserRouter";
+import AuthRouter from "./routes/AuthRouter";
 import SESSION_OPTIONS from "./configs/SessionOptions";
 import session from "express-session";
-import User from "./models/User";
 import {isAuthenticated} from "./middleware/Auth";
-
-declare module 'express-session' {
-    interface SessionData {
-        user: User | null
-    }
-}
+import AuthController from "./controllers/AuthController";
+import UserService from "./services/UserService";
+import AuthService from "./services/AuthService";
 
 app.use(express.json())
 app.use(session(SESSION_OPTIONS))
@@ -25,13 +21,16 @@ app.all('/', (_req, res) => {
     res.sendFile("./index.html", {root: path.join(__dirname, '.')})
 });
 
-app.use("/user", UserRouter)
+app.use("/auth", AuthRouter)
 
 app.use(isAuthenticated)
 
 if (NODE_ENV === "development") {
     app.listen(3000, '0.0.0.0', () => {
-        app.locals.db = new MockDBRepository()
+        const db = new MockDBRepository()
+        const userService = new UserService(db)
+        const authService = new AuthService(db)
+        app.locals.authController = new AuthController(userService, authService)
         console.log(`HTTP Development Server listening on port 3000`);
     });
 }
