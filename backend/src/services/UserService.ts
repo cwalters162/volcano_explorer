@@ -3,7 +3,6 @@ import IDatabaseRepository from "../repositories/mockDBRepository"
 interface IUserService {
     getUserByName(name: string): User
     // getUserByID(id: number): User
-    createUser(name: string, password: string): User
     // deleteUser(): User
     // update(): User
 }
@@ -15,10 +14,6 @@ class UserService implements IUserService {
     }
     getUserByName(name: string): User {
         return this.db.getUserByName(name)
-    }
-
-    createUser(name: string, password: string): User {
-        return this.db.createUser(name, password)
     }
 }
 

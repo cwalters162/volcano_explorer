@@ -5,6 +5,7 @@ import {TPos} from "../services/GridMapService";
 import {IDatabaseRepository} from "../configs/DatabaseConfig";
 class mockDBRepository implements IDatabaseRepository{
     users: User[]
+    passwords: Map<string, string>
     nextUserId: number
     gameState: GameState[]
     nextGameStateId: number
@@ -12,7 +13,8 @@ class mockDBRepository implements IDatabaseRepository{
 
     constructor() {
         this.users = []
-        this.gameState =[]
+        this.passwords = new Map<string, string>()
+        this.gameState = []
         this.nextUserId = 1
         this.nextGameStateId = 1
     }
@@ -30,8 +32,21 @@ class mockDBRepository implements IDatabaseRepository{
 
         return this.users[userIndex]
     }
-    createUser(name: string, password: string) {
-        const newUser = new User(this.nextUserId, name, password)
+    checkUserPassword(name: string, password: string): Boolean {
+        const user_found = this.passwords.get(name)
+        return !!(user_found && user_found === password);
+    }
+    getUserPassword(name: string): Error | string {
+        const hashFound = this.passwords.get(name)
+        if (hashFound) {
+            return hashFound
+        } else {
+            return Error("User does not exist.")
+        }
+    }
+    createUser(name: string, hash: string) {
+        this.passwords.set(name, hash)
+        const newUser = new User(this.nextUserId, name)
         this.users.push(newUser)
         this.nextUserId += 1
         return newUser

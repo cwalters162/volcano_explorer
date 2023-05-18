@@ -10,7 +10,7 @@ AuthRouter.post("/user", async (req: Request, res: Response) => {
 
     try {
         const user = ZAuthUserRequestSchema.parse(req.body)
-        let result = authController.createUser(user.name, user.password)
+        let result = await authController.createUser(user.name, user.password)
         if (result instanceof User) {
             res.status(200).json(result)
         } else {
@@ -21,12 +21,12 @@ AuthRouter.post("/user", async (req: Request, res: Response) => {
     }
 })
 
-AuthRouter.post("/login", (req: Request, res: Response) => {
+AuthRouter.post("/login", async (req: Request, res: Response) => {
     const authController = app.locals.authController
 
     try {
         const user = ZAuthUserRequestSchema.parse(req.body)
-        let result = authController.loginUser(user.name, user.password)
+        let result = await authController.loginUser(user.name, user.password)
         if (result instanceof User) {
             res.status(200).json(result)
         } else {

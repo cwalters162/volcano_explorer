@@ -7,6 +7,8 @@ export interface IDatabaseRepository {
     getUsers(): User[]
     getUserByName(name: string): User
     getUserByID(id: number): User
+    checkUserPassword(name: string, password: string): Boolean
+    getUserPassword(name: string): Error | string
     createUser(name: string, password: string): User
     getGameStateByUserID(playerId: number): GameState
     createGameState(health: number, moves: number, gridMap: TTile[][], player_id: number, start_location: TPos): GameState

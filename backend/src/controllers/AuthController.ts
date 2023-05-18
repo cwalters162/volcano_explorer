@@ -4,8 +4,8 @@ import UserService from "../services/UserService";
 import AuthService from "../services/AuthService";
 
 interface IAuthController {
-    createUser(name: string, password: string): Error | User
-    loginUser(name: string, password: string): Error | User
+    createUser(name: string, password: string): Promise<Error | User>
+    loginUser(name: string, password: string): Promise<Error | User>
 }
 
 class AuthController implements IAuthController {
@@ -16,19 +16,19 @@ class AuthController implements IAuthController {
         this.userService = userService
         this.authService = authService
     }
-    createUser(name: string, password: string): Error | User {
+   async createUser(name: string, password: string): Promise<Error | User> {
         const user_exist = this.userService.getUserByName(name)
         if (user_exist) {
             return Error("User name already taken")
         } else {
-            return this.userService.createUser(name, password)
+            return await this.authService.createUser(name, password)
         }
     }
 
-    loginUser(name: string, password: string): Error | User {
+    async loginUser(name: string, password: string): Promise<Error | User> {
         const user_exist = this.userService.getUserByName(name)
         if (user_exist) {
-            return this.authService.loginUser(name, password)
+            return await this.authService.loginUser(name, password)
         } else {
             return Error("User does not exist.")
         }
