@@ -5,6 +5,10 @@ import User from "../models/User";
 import express from "express";
 const AuthRouter = express.Router()
 
+AuthRouter.get("/", (_req: Request, res: Response) => {
+    res.status(200).json({message: "Please Login."})
+})
+
 AuthRouter.post("/user", async (req: Request, res: Response) => {
     const authController = app.locals.authController
 
@@ -28,6 +32,7 @@ AuthRouter.post("/login", async (req: Request, res: Response) => {
         const user = ZAuthUserRequestSchema.parse(req.body)
         let result = await authController.loginUser(user.name, user.password)
         if (result instanceof User) {
+            req.session.user = result
             res.status(200).json(result)
         } else {
             res.status(500).json({error: `${result}`})

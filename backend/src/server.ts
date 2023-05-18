@@ -17,6 +17,7 @@ import AuthService from "./services/AuthService";
 app.use(express.json())
 app.use(session(SESSION_OPTIONS))
 
+
 app.all('/', (_req, res) => {
     res.sendFile("./index.html", {root: path.join(__dirname, '.')})
 });
@@ -24,6 +25,11 @@ app.all('/', (_req, res) => {
 app.use("/auth", AuthRouter)
 
 app.use(isAuthenticated)
+
+app.use("/protected", (_req, res) => {
+    res.status(200).json({status: "Good", isProtected: true})
+})
+
 
 if (NODE_ENV === "development") {
     app.listen(3000, '0.0.0.0', () => {

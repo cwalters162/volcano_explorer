@@ -1,10 +1,11 @@
 import {NextFunction, Request, Response} from "express";
+import {ZUserSchema} from "../models/User";
 
 export function isAuthenticated (req: Request, res: Response, next: NextFunction) {
-    if (req.session.user) {
+    try {
+        ZUserSchema.parse(req.session.user)
         next()
-    }
-    else {
-        res.redirect('/user/login')
+    } catch{
+        res.redirect('/auth')
     }
 }
