@@ -51,8 +51,8 @@ class mockDBRepository implements IDatabaseRepository{
         this.nextUserId += 1
         return newUser
     }
-    createGameState(health: number, moves: number, gridMap: TTile[][], player_id: number, start_location: TPos): GameState {
-        const newGameState = new GameState(this.nextGameStateId, health, moves, gridMap, player_id, start_location)
+    createGameState(health: number, moves: number, player_id: number, start_location: TPos, gridMap: TTile[][]): GameState {
+        const newGameState = new GameState(this.nextGameStateId, health, moves, player_id, start_location, gridMap)
         this.gameState.push(newGameState)
         this.nextGameStateId += 1
         return newGameState

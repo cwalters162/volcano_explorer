@@ -13,6 +13,9 @@ import {isAuthenticated} from "./middleware/Auth";
 import AuthController from "./controllers/AuthController";
 import UserService from "./services/UserService";
 import AuthService from "./services/AuthService";
+import GameService from "./services/GameService";
+import GameController from "./controllers/GameController";
+import V1Router from "./routes/V1Router";
 
 app.use(express.json())
 app.use(session(SESSION_OPTIONS))
@@ -26,9 +29,7 @@ app.use("/auth", AuthRouter)
 
 app.use(isAuthenticated)
 
-app.use("/protected", (_req, res) => {
-    res.status(200).json({status: "Good", isProtected: true})
-})
+app.use("/api", V1Router)
 
 
 if (NODE_ENV === "development") {
@@ -36,7 +37,9 @@ if (NODE_ENV === "development") {
         const db = new MockDBRepository()
         const userService = new UserService(db)
         const authService = new AuthService(db)
+        const gameService = new GameService(db)
         app.locals.authController = new AuthController(userService, authService)
+        app.locals.gameController = new GameController(gameService)
         console.log(`HTTP Development Server listening on port 3000`);
     });
 }

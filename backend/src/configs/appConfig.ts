@@ -1,1 +1,1 @@
-export const SALT_ROUNDS = process.env.saltrounds || 10
+export const SALT_ROUNDS = process.env.salt_rounds || 10
