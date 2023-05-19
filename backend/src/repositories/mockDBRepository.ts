@@ -51,16 +51,26 @@ class mockDBRepository implements IDatabaseRepository{
         this.nextUserId += 1
         return newUser
     }
+    getGameStateById(gameId: number): Error | GameState {
+        const game = this.gameState.find(gs => gs.id === gameId)
+        if (game) {
+            return game
+        } else {
+            return Error(`Could not find game: ${gameId}`)
+        }
+    }
+    getAllGameIdsByUserId(userId: number): number[] {
+        const playerGames = this.gameState.filter(gs => gs.player_id === userId)
+        return playerGames.map(gs => gs.id)
+    }
+
     createGameState(health: number, moves: number, player_id: number, start_location: TPos, gridMap: TTile[][]): GameState {
         const newGameState = new GameState(this.nextGameStateId, health, moves, player_id, start_location, gridMap)
         this.gameState.push(newGameState)
         this.nextGameStateId += 1
         return newGameState
     }
-    getGameStateByUserID(playerId: number): GameState {
-        const gameStateIndex = this.gameState.findIndex(gameState => gameState.player_id = playerId)
-        return this.gameState[gameStateIndex]
-    }
+
 }
 
 export default mockDBRepository

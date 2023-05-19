@@ -4,6 +4,7 @@ import GameState from "../models/GameState";
 
 interface IGameController {
     createGame(playerId: number, createGameRequest: CreateGameRequest): Promise<Error | GameState>
+    getAllGamesByUserId(playerId: number): Promise<Error | number[]>
 }
 
 class GameController implements IGameController {
@@ -33,7 +34,22 @@ class GameController implements IGameController {
         } catch (error) {
             return error as Error
         }
+    }
 
+    async getAllGamesByUserId(playerId: number): Promise<Error | number[]> {
+        try {
+            return this.gameService.getAllGamesByUserId(playerId)
+        } catch {
+            return Error(`Failed to get all the games belonging to user id: ${playerId}`)
+        }
+    }
+
+    async getGameStateByID(userId: number, gameId: number): Promise<Error | GameState> {
+        try {
+            return this.gameService.getGameStateById(userId, gameId)
+        } catch {
+            return Error(`Failed to get game id: ${gameId} for player id: ${userId}`)
+        }
     }
 }
 
@@ -45,5 +61,8 @@ export const ZCreateGameRequestSchema = z.object({
 })
 
 export type CreateGameRequest = z.infer<typeof ZCreateGameRequestSchema>
+
+export const ZEnumDirectionSchema = z.enum(["up", "down", "left", "right"])
+export type EDirection = z.infer<typeof ZEnumDirectionSchema>
 
 export default GameController
