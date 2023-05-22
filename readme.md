@@ -1,7 +1,7 @@
 # Volcano Explorer!
 Puzzle map exploration!
 
-## Features & roadmap
+## Features & Roadmap
 - [x] Random Map generation
   - Decide on a new method of map generation
     - Noise map
@@ -18,14 +18,13 @@ Puzzle map exploration!
   - [x] Start
   - [x] End
   - [ ] Wall
-- [ ] Per user map instances.
+- [x] Per user map instances.
 - [ ] Story Mode with persistent puzzles.
 - [ ] First Party Frontend Client
   - [ ] Graphic tiles
   - [ ] Click based movement
   - [ ] Keyboard movement
-- [ ] ability to back up progress locally or server side.
-
-## Todo
-- [ ] Clean up the code and organize it.
-- [ ] Actual project planning.
+- [x] ability to back up progress
+  - [ ] locally 
+  - [x] server side
+- [ ] Clean up the code and organize it. (Always in progress until considered complete)
