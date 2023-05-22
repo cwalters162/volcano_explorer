@@ -67,7 +67,7 @@ V1Router.post("/game/:gameId/move/:direction", async (req, res) => {
         const direction = ZEnumDirectionSchema.parse(req.params.direction)
         const result = await gameController.movePlayerInGameById(userId!, gameId, direction)
         if (result instanceof GameState) {
-            res.status(200).json({result})
+            res.status(200).json(result)
         } else {
             res.status(500).json({error: result.message})
         }
@@ -87,7 +87,7 @@ V1Router.get("/game/:gameId/solution", async (req, res) => {
         const gameId = parseInt(gameIdString)
         const result: Error | TTile[] = await gameController.solveGameById(userId!, gameId)
         if (typeof result != typeof Error) {
-            res.status(200).json({result})
+            res.status(200).json(result)
         } else {
             if ("message" in result) {
                 res.status(500).json({error: result.message})
@@ -111,7 +111,7 @@ if (NODE_ENV === "development") {
             const path: Error | TTile[] = await gameController.solveGameById(userId!, gameId)
             if (typeof path != typeof Error) {
                 const solutionResult = await gameController.autoSolve(userId!, gameId, path as TTile[])
-                res.status(200).json({solutionResult})
+                res.status(200).json(solutionResult)
             } else {
                 if ("message" in path) {
                     res.status(500).json({error: path.message})

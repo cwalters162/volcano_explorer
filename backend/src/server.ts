@@ -22,7 +22,7 @@ app.use(session(SESSION_OPTIONS))
 
 
 app.all('/', (_req, res) => {
-    res.sendFile("./index.html", {root: path.join(__dirname, '.')})
+    res.sendFile("./static/index.html", {root: path.join(__dirname, '.')})
 });
 
 app.use("/auth", AuthRouter)

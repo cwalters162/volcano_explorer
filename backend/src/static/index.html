@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+      body {
+        color: #002B5B;
+        background: #F9F5EB;
+      }
+      h1, h2, h3 {
+        color: #EA5455;
+      }
+    </style>
+</head>
+<body>
+<h1 id="volcano-explorer">Volcano Explorer</h1>
+<h2 id="endpoints">Endpoints</h2>
+<h3 id="-">/</h3>
+<p>This page</p>
+<h3 id="-user">/user</h3>
+<p>POST
+    Request </p>
+<pre><code class="lang-json">{
+  <span class="hljs-attr">"name"</span>: string,
+  <span class="hljs-attr">"password"</span>: string
+}
+</code></pre>
+<p>Response</p>
+<pre><code class="lang-Json">{
+    <span class="hljs-attr">"id"</span>: number,
+    <span class="hljs-attr">"name"</span>: string,
+    <span class="hljs-attr">"won"</span>: number,
+    <span class="hljs-attr">"loss"</span>: number
+}
+</code></pre>
+<h3 id="-login">/login</h3>
+<p>POST
+    Request</p>
+<pre><code class="lang-json">{ <span class="hljs-attr">"name"</span>: string, <span class="hljs-attr">"password"</span>: string }
+</code></pre>
+<p>Response</p>
+<pre><code class="lang-json">{
+  <span class="hljs-attr">"id"</span>: number,
+  <span class="hljs-attr">"name"</span>: string,
+  <span class="hljs-attr">"won"</span>: number,
+  <span class="hljs-attr">"loss"</span>: number
+}
+</code></pre>
+<h2 id="must-be-longed-in-for-further-endpoints">MUST BE LONGED IN FOR FURTHER ENDPOINTS</h2>
+<h3 id="-api-creategame">/api/creategame</h3>
+<p>POST
+    Request</p>
+<pre><code class="lang-json">{
+  <span class="hljs-string">"difficulty"</span>: <span class="hljs-built_in">string</span>, // easy, medium, hard, <span class="hljs-literal">or</span> custom.
+  <span class="hljs-string">"size"</span>: <span class="hljs-built_in">number</span>, // optional used <span class="hljs-keyword">for</span> custom.
+  <span class="hljs-string">"health"</span>: <span class="hljs-built_in">number</span>, //  optional used <span class="hljs-keyword">for</span> custom.
+  <span class="hljs-string">"moves"</span>: <span class="hljs-built_in">number</span> // optional used <span class="hljs-keyword">for</span> custom.
+}
+</code></pre>
+<p>Response</p>
+<pre><code class="lang-json">{
+  <span class="hljs-string">"id"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"health"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"moves"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"player_id"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"player_location"</span>: {
+    <span class="hljs-string">"x"</span>: <span class="hljs-built_in">number</span>,
+    <span class="hljs-string">"y"</span>: <span class="hljs-built_in">number</span>
+  },
+  <span class="hljs-string">"game_status"</span>: <span class="hljs-built_in">string</span> // playing, win, <span class="hljs-literal">or</span> loss.
+  <span class="hljs-string">"map"</span>: [
+    {
+      <span class="hljs-string">"type"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"health_cost"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"move_cost"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"symbol"</span>: <span class="hljs-built_in">string</span>,
+      <span class="hljs-string">"x"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"y"</span>: <span class="hljs-built_in">number</span>
+    }
+  ]
+}
+</code></pre>
+<h3 id="-api-games">/api/games</h3>
+<p>GET
+    Request</p>
+<pre><code class="lang-json">[
+  number
+]
+</code></pre>
+<h3 id="-api-game-gameid">/api/game/:gameId</h3>
+<p>GET</p>
+<p><code>gameId</code> must be a number</p>
+<p>Response</p>
+<pre><code class="lang-json">{
+  <span class="hljs-string">"id"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"health"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"moves"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"player_id"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"player_location"</span>: {
+    <span class="hljs-string">"x"</span>: <span class="hljs-built_in">number</span>,
+    <span class="hljs-string">"y"</span>: <span class="hljs-built_in">number</span>
+  },
+  <span class="hljs-string">"game_status"</span>: <span class="hljs-built_in">string</span> // playing, win, <span class="hljs-literal">or</span> loss.
+  <span class="hljs-string">"map"</span>: [
+    {
+      <span class="hljs-string">"type"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"health_cost"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"move_cost"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"symbol"</span>: <span class="hljs-built_in">string</span>,
+      <span class="hljs-string">"x"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"y"</span>: <span class="hljs-built_in">number</span>
+    }
+  ]
+}
+</code></pre>
+<h3 id="-api-game-gameid-move-direction">/api/game/:gameId/move/:direction</h3>
+<p>POST</p>
+<p><code>gameId</code> must be a number</p>
+<p><code>direction</code> must be <code>&quot;up&quot;</code>, <code>&quot;down&quot;</code>, <code>&quot;left&quot;</code>, or <code>&quot;right&quot;</code></p>
+<p>Response</p>
+<pre><code class="lang-json">{
+  <span class="hljs-string">"id"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"health"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"moves"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"player_id"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"player_location"</span>: {
+    <span class="hljs-string">"x"</span>: <span class="hljs-built_in">number</span>,
+    <span class="hljs-string">"y"</span>: <span class="hljs-built_in">number</span>
+  },
+  <span class="hljs-string">"game_status"</span>: <span class="hljs-built_in">string</span> // playing, win, <span class="hljs-literal">or</span> loss.
+  <span class="hljs-string">"map"</span>: [
+    {
+      <span class="hljs-string">"type"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"health_cost"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"move_cost"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"symbol"</span>: <span class="hljs-built_in">string</span>,
+      <span class="hljs-string">"x"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"y"</span>: <span class="hljs-built_in">number</span>
+    }
+  ]
+}
+</code></pre>
+<h3 id="-api-game-gameid-solution">/api/game/:gameId/solution</h3>
+<p>GET</p>
+<p><code>gameId</code> must be a number</p>
+<p>Response</p>
+<pre><code class="lang-json">[
+  {
+    <span class="hljs-attr">"type"</span>: number,
+    <span class="hljs-attr">"health_cost"</span>: number,
+    <span class="hljs-attr">"move_cost"</span>: number,
+    <span class="hljs-attr">"symbol"</span>: string,
+    <span class="hljs-attr">"x"</span>: number,
+    <span class="hljs-attr">"y"</span>: number
+  },
+  {
+    <span class="hljs-attr">"type"</span>: number,
+    <span class="hljs-attr">"health_cost"</span>: number,
+    <span class="hljs-attr">"move_cost"</span>: number,
+    <span class="hljs-attr">"symbol"</span>: string,
+    <span class="hljs-attr">"x"</span>: number,
+    <span class="hljs-attr">"y"</span>: number
+  }
+]
+</code></pre>
+<h3 id="-api-game-gameid-auto-solve-only-in-development-could-be-enabled-on-production-if-value-is-found-in-an-auto-solution">/api/game/:gameId/auto-solve // ONLY IN DEVELOPMENT could be enabled on production if value is found in an auto solution</h3>
+<p>GET</p>
+<p><code>gameId</code> must be a number</p>
+<p>Response</p>
+<pre><code class="lang-json">{
+  <span class="hljs-string">"id"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"health"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"moves"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"player_id"</span>: <span class="hljs-built_in">number</span>,
+  <span class="hljs-string">"player_location"</span>: {
+    <span class="hljs-string">"x"</span>: <span class="hljs-built_in">number</span>,
+    <span class="hljs-string">"y"</span>: <span class="hljs-built_in">number</span>
+  },
+  <span class="hljs-string">"game_status"</span>: <span class="hljs-built_in">string</span> // playing, win, <span class="hljs-literal">or</span> loss.
+  <span class="hljs-string">"map"</span>: [
+    {
+      <span class="hljs-string">"type"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"health_cost"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"move_cost"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"symbol"</span>: <span class="hljs-built_in">string</span>,
+      <span class="hljs-string">"x"</span>: <span class="hljs-built_in">number</span>,
+      <span class="hljs-string">"y"</span>: <span class="hljs-built_in">number</span>
+    }
+  ]
+}
+</code></pre>
+</body>
+</html>
