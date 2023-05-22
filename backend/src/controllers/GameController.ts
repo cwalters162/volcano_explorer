@@ -1,12 +1,14 @@
 import GameService, {ZEnumDifficultySchema} from "../services/GameService";
 import {z} from "zod";
 import GameState, {EGameStatus} from "../models/GameState";
+import {TTile} from "../models/Tile";
 
 interface IGameController {
     createGame(playerId: number, createGameRequest: CreateGameRequest): Promise<Error | GameState>
     getAllGamesByUserId(playerId: number): Promise<Error | number[]>
     getGameStateByID(userId: number, gameId: number): Promise<Error | GameState>
     movePlayerInGameById(playerId: number, gameId: number, direction: string): Promise<Error | GameState>
+    solveGameById(playerId: number, gameId: number): Promise<Error | TTile[]>
 }
 
 class GameController implements IGameController {
@@ -71,6 +73,31 @@ class GameController implements IGameController {
         }
     }
 
+    async solveGameById(playerId: number, gameId: number): Promise<Error | TTile[]> {
+        try {
+            const game = await this.getGameStateByID(playerId, gameId)
+            if (game instanceof GameState) {
+                    return await this.gameService.getGameSolutionById(gameId)
+            } else {
+                return game
+            }
+        } catch {
+            return Error(`Failed to move in game: ${gameId} for user ${playerId}`)
+        }
+    }
+
+    async autoSolve(playerId: number, gameId: number, path: TTile[]): Promise<Error | GameState> {
+        try {
+            const game = await this.getGameStateByID(playerId, gameId)
+            if (game instanceof GameState) {
+                return await this.gameService.solveGameById(playerId, gameId, path)
+            } else {
+                return game
+            }
+        } catch {
+            return Error(`Failed to move in game: ${gameId} for user ${playerId}`)
+        }
+    }
 }
 
 export const ZCreateGameRequestSchema = z.object({

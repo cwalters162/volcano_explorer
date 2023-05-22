@@ -7,7 +7,7 @@ export enum TileType {
     End
 }
 
-export type TTile = {
+export interface TTile {
     x: number
     y: number
     type: TileType

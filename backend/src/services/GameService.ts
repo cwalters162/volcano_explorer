@@ -3,11 +3,15 @@ import IDatabaseRepository from "../repositories/mockDBRepository"
 import TileService from "./TileService";
 import GridMapService from "./GridMapService";
 import {z} from "zod";
+import {TTile} from "../models/Tile";
+import {aStar} from "../Utilites/PathFindingUtilites";
 
 interface IGameService {
     createGame(userId: number, size: number, health: number, moves: number): GameState
     getAllGamesByUserId(userId: number): Error | number[]
     getGameStateById(userId: number, gameId: number): Error | GameState
+    movePlayerInGameByID(playerId: number, gameId: number, direction: string): Error | GameState
+    getGameSolutionById(gameId: number): Promise<Error | TTile[]>
 }
 
 export const ZEnumDifficultySchema = z.enum(["custom", "easy", "medium", "hard"])
@@ -147,6 +151,56 @@ class GameService implements IGameService {
             return Error(`User ID: ${playerId} does not have access to this game`)
         }
     }
+
+    async getGameSolutionById(gameId: number): Promise<Error | TTile[]> {
+        const game = this.db.getGameStateById(gameId)
+        if (game instanceof GameState) {
+            const gameMap = game.map
+            const startPos = this.gridMapService.getStartLocation(gameMap)
+            const endPos = this.gridMapService.getEndLocation(gameMap)
+            const start = gameMap[startPos.x][startPos.y]
+            const end = gameMap[endPos.x][endPos.y]
+            return await aStar(start, end, gameMap)
+        } else {
+            return Error("Unable to solve.")
+        }
+    }
+
+    async solveGameById(playerId: number, gameId: number, path: TTile[]): Promise<Error | GameState> {
+        let result: Error | GameState = Error("I broke solving the game")
+        let isWon = false
+        try {
+            while (!isWon) {
+                let game = await this.getGameStateById(playerId, gameId) as GameState
+                if (game.game_status == EGameStatus.WIN){
+                    isWon = true
+                    break
+                }
+                //Get an array of directions to go
+                for (let tile of path) {
+                    if (tile.x > game.player_location.x && tile.y === game.player_location.y) {
+                        // down
+                        result = await this.movePlayerInGameByID(game.player_id, game.id, "down")
+                    } else if (tile.x < game.player_location.x && tile.y === game.player_location.y) {
+                        // up
+                        result = await this.movePlayerInGameByID(game.player_id, game.id, "up")
+                    } else if (tile.x === game.player_location.x && tile.y > game.player_location.y) {
+                        // right
+                        result = await this.movePlayerInGameByID(game.player_id, game.id, "right")
+                    } else if (tile.x === game.player_location.x && tile.y < game.player_location.y) {
+                        //left
+                        result = await this.movePlayerInGameByID(game.player_id, game.id, "left")
+                    }
+                }
+            }
+            return result
+        } catch {
+            return result
+        }
+
+    }
 }
+
+
 
 export default GameService
