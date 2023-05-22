@@ -71,6 +71,12 @@ class mockDBRepository implements IDatabaseRepository{
         return newGameState
     }
 
+    updateGameStateById(updatedGameState: GameState): Number {
+        const index = this.gameState.findIndex(gs => gs.id === updatedGameState.id)
+        this.gameState[index] = updatedGameState
+        return 1
+    }
+
 }
 
 export default mockDBRepository

@@ -1,7 +1,7 @@
 import {TTile} from "./Tile";
 import {TPos} from "../services/GridMapService";
 
-enum EGameStatus {
+export enum EGameStatus {
     PLAYING = "playing",
     WIN = "win",
     LOSS = "loss"

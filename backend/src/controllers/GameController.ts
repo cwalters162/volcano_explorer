@@ -1,10 +1,12 @@
 import GameService, {ZEnumDifficultySchema} from "../services/GameService";
 import {z} from "zod";
-import GameState from "../models/GameState";
+import GameState, {EGameStatus} from "../models/GameState";
 
 interface IGameController {
     createGame(playerId: number, createGameRequest: CreateGameRequest): Promise<Error | GameState>
     getAllGamesByUserId(playerId: number): Promise<Error | number[]>
+    getGameStateByID(userId: number, gameId: number): Promise<Error | GameState>
+    movePlayerInGameById(playerId: number, gameId: number, direction: string): Promise<Error | GameState>
 }
 
 class GameController implements IGameController {
@@ -51,6 +53,24 @@ class GameController implements IGameController {
             return Error(`Failed to get game id: ${gameId} for player id: ${userId}`)
         }
     }
+
+    async movePlayerInGameById(playerId: number, gameId: number, direction: string): Promise<Error | GameState> {
+        try {
+                const game = await this.getGameStateByID(playerId, gameId)
+                if (game instanceof GameState) {
+                    if (game.game_status == EGameStatus.PLAYING) {
+                        return await this.gameService.movePlayerInGameByID(playerId, gameId, direction)
+                    } else {
+                        return Error(`Game ID: ${gameId} was already a ${game.game_status}.`)
+                    }
+                } else {
+                    return game
+                }
+        } catch {
+            return Error(`Failed to move in game: ${gameId} for user ${playerId}`)
+        }
+    }
+
 }
 
 export const ZCreateGameRequestSchema = z.object({
