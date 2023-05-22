@@ -96,7 +96,7 @@ class GameService implements IGameService {
                 }
                 case "left": {
                     if (current_pos.y == 0) {
-                        return Error("Unable to left down. Already at the left side.")
+                        return Error("Unable to move down. Already at the left side.")
                     } else {
                         game.moves += game.map[current_pos.x][current_pos.y - 1].move_cost
                         game.health += game.map[current_pos.x][current_pos.y - 1].health_cost

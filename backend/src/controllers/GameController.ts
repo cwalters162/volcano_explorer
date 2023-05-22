@@ -17,11 +17,11 @@ class GameController implements IGameController {
     }
 
     async createGame(playerId: number, createGameRequest: CreateGameRequest): Promise<Error | GameState> {
-        const {size, playerHealth, playerMoves} = createGameRequest
+        const {size, health, moves} = createGameRequest
         try {
             switch (createGameRequest.difficulty) {
                 case "custom": {
-                    return await this.gameService.createGame(playerId, size, playerHealth, playerMoves)
+                    return await this.gameService.createGame(playerId, size, health, moves)
                 }
                 case "easy": {
                     return await this.gameService.createGame(playerId, 30)
@@ -76,8 +76,8 @@ class GameController implements IGameController {
 export const ZCreateGameRequestSchema = z.object({
     difficulty: ZEnumDifficultySchema,
     size: z.number().optional(),
-    playerHealth: z.number().optional(),
-    playerMoves: z.number().optional(),
+    health: z.number().optional(),
+    moves: z.number().optional(),
 })
 
 export type CreateGameRequest = z.infer<typeof ZCreateGameRequestSchema>

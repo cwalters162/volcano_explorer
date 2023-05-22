@@ -52,8 +52,6 @@ V1Router.get("/game/:gameId", async (req, res) => {
     }
 })
 
-
-// TODO: Make sure this only works on games that are in "PLAYING" status.
 V1Router.post("/game/:gameId/move/:direction", async (req, res) => {
     const gameController: GameController = app.locals.gameController
     const userId = req.session.user?.id
