@@ -16,7 +16,9 @@ import AuthService from "./services/AuthService";
 import GameService from "./services/GameService";
 import GameController from "./controllers/GameController";
 import V1Router from "./routes/V1Router";
+import cors from "cors"
 
+app.use(cors())
 app.use(express.json())
 app.use(session(SESSION_OPTIONS))
 
