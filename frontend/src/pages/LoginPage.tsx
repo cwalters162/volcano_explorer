@@ -1,29 +1,14 @@
 import {json, Link, useNavigate} from "react-router-dom";
 import {Dispatch, SetStateAction, useState} from "react";
 import {User} from "../App";
+import {AuthProvider, useAuth} from "../hooks/AuthProvider";
 
-interface LoginPageProps {
-    onLogin?: Dispatch<SetStateAction<User | undefined>>
-}
-
-export default function LoginPage({ onLogin }: LoginPageProps) {
+export default function LoginPage() {
     const [creds, setCreds] = useState<{name: string, password: string}>({ name: "", password: ""});
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     async function handleLogin(): Promise<void> {
-        // For demonstration purposes only. Never use these checks in production!
-        // Use a proper authentication implementation
-        // if(creds.username === 'admin' && creds.password === '123') {
-        //     onLogin && onLogin({
-        //         id: 1,
-        //         name: creds.username,
-        //         won: 0,
-        //         loss: 0
-        //     });
-        //     navigate('/stats');
-        // }
-
-    console.log(JSON.stringify(creds))
         try {
             const response = await fetch("http://localhost:3000/auth/login", {
                 method: "POST", // or 'PUT'
@@ -32,9 +17,15 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                 },
                 body: JSON.stringify(creds),
             });
-            const result = await response.json();
-            onLogin && onLogin(result);
-            console.log("Success:", result);
+            if (response.status == 200) {
+                const result = await response.json();
+                await login(result)
+                navigate("/app/menu")
+                console.log("Success:", result);
+            } else {
+                console.log(response)
+            }
+
         } catch (error) {
             console.error("Error:", error);
         }

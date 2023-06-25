@@ -2,6 +2,10 @@ import React, {useState} from 'react';
 import {Routes, Route, Link} from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import GamePage from "./pages/GamePage";
+import LandingPage from "./pages/LandingPage";
+import MenuPage from "./pages/MenuPage";
+import SettingsPage from "./pages/SettingsPage";
+import {ProtectedRoute} from "./pages/ProtectedRoute";
 
  export interface User {
     id: number
@@ -11,20 +15,16 @@ import GamePage from "./pages/GamePage";
 }
 
 function App() {
-    const [user, setUser] = useState<User>()
-
   return (
     <div className="App">
-        <header>
-            <nav className={'bg-red-900 text-white w-full text-7xl h-24'}>
-                <span>Volcano Explorer</span>
-                <Link to={"/game"}>Game</Link>
-                {user && <span>{`${user.name}`}</span>}
-            </nav>
-        </header>
         <Routes>
-            <Route path={"/"} element={<LoginPage onLogin={setUser}/>}/>
-            <Route path={"/game"} element={<GamePage/>}/>
+            <Route path={"/"} element={<LandingPage/>}/>
+            <Route path={"/login"} element={<LoginPage />}/>
+            <Route path={"/app"} element={<ProtectedRoute />}>
+                <Route path={"menu"} element={<MenuPage/>}/>
+                <Route path={"game"} element={<GamePage/>}/>
+                <Route path={"settings"} element={<SettingsPage/>}/>
+            </Route>
         </Routes>
     </div>
   );
