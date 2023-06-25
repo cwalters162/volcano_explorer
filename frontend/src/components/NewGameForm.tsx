@@ -54,7 +54,7 @@ export default function NewGameForm() {
     }
 
     return (
-        <form className="max-w-sm mx-auto" onSubmit={handleSubmit}>
+        <form className="max-w-sm mx-auto sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3 text-center" onSubmit={handleSubmit}>
             <div className="mb-4">
                 <label htmlFor="difficulty" className="block mb-2 font-medium">
                     Difficulty
@@ -62,7 +62,7 @@ export default function NewGameForm() {
                 <select
                     id="difficulty"
                     name="difficulty"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md min-w-sm"
                     value={formData.difficulty}
                     onChange={handleChange}
                 >

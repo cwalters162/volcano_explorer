@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Routes, Route, Link} from "react-router-dom";
-import LoginFormModal from "./components/LoginFormModal";
 import GamePage from "./pages/GamePage";
 import LandingPage from "./pages/LandingPage";
 import MenuPage from "./pages/MenuPage";
 import SettingsPage from "./pages/SettingsPage";
 import {ProtectedRoute} from "./utils/ProtectedRoute";
+
 
  export interface User {
     id: number

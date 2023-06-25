@@ -39,19 +39,17 @@ export default function MenuPage() {
     }
 
     return (
-        <div className={"grid grid-flow-col"}>
-            <div className={"text-center"}>
-                <NewGameForm/>
-            </div>
-            <div className={"text-center"}>
-                <div className="max-w-sm mx-auto">
-                    <h2 className="mb-4 text-xl font-medium">Playing Games</h2>
+        <div className={"flex flex-wrap"}>
+            <NewGameForm/>
+            <div className={"text-center sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3"}>
+                <div className={"max-w-sm mx-auto"}>
+                    <h2 className={"mb-4 text-xl font-medium"}>Playing Games</h2>
 
-                    <ul className="max-h-72 overflow-y-auto border border-gray-300 rounded-md">
+                    <ul className={"max-h-72 overflow-y-auto border border-gray-300 rounded-md"}>
                         {activeGames.map(game => (
                             <li
                                 key={game.id}
-                                className="px-4 py-2 border-b border-gray-300 last:border-b-0 cursor-pointer hover:bg-amber-200"
+                                className={"px-4 py-2 border-b border-gray-300 last:border-b-0 cursor-pointer hover:bg-amber-200"}
                                 onClick={() => onItemClick(game)}
                             >
                                 <div className="font-medium">Game ID: {game.id}</div>
@@ -62,7 +60,7 @@ export default function MenuPage() {
                     </ul>
                 </div>
             </div>
-            <div className={"text-center"}>
+            <div className={"text-center sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3"}>
                 <div className={"max-w-sm mx-auto"}>
                     <h2 className={"mb-4 text-xl font-medium"}>Completed Games</h2>
                     <ul className={"max-h-72 overflow-y-auto border border-gray-300 rounded-md"}>

@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import LoginFormModal from "../components/LoginFormModal";
 import CreateUserFormModal from "../components/CreateUserFormModal";
+import {useAuth} from "../utils/AuthProvider";
+import {Navigate, useNavigate} from "react-router-dom";
 
 interface CardProps {
     title: string,
@@ -24,10 +26,11 @@ function Card({title, body, customCardStyle, customCardTitleStyle, customCardBod
 }
 
 export default function LandingPage() {
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const {user} = useAuth()
+    const navigate = useNavigate()
 
-    function handleLoginModalClose() {
-        setIsLoginModalOpen(!isLoginModalOpen)
+    if (user) {
+        return <Navigate to="/app/menu" />;
     }
 
     return (
