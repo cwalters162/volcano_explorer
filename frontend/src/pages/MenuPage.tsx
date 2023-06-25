@@ -1,6 +1,7 @@
 import {backend_port, backend_url} from "../utils/env";
 import React, {useState} from "react";
 import NewGameForm from "../components/NewGameForm";
+import {useNavigate} from "react-router-dom";
 
 interface newGameOptions {
     difficulty: string, // easy, medium, hard, or custom.
@@ -11,7 +12,7 @@ interface newGameOptions {
 
 export default function MenuPage() {
     const [newGameOptions, setNewGameOptions] = useState<newGameOptions>()
-
+    const navigate = useNavigate()
     const activeGames = tempGameList.filter((game)=> game.game_status === "playing")
     const completedGames = tempGameList.filter((game)=>game.game_status !== "playing")
     async function handleCreateGame(): Promise<void> {
@@ -35,7 +36,9 @@ export default function MenuPage() {
     }
 
     function onItemClick(game: GameData){
+        console.log("Navigating to app game")
         console.log(game)
+        navigate('/app/game', { state: game})
     }
 
     return (
@@ -102,7 +105,7 @@ export interface GameData {
     player_id: number;
     player_location: PlayerLocation;
     game_status: string;
-    map: MapItem[];
+    map: MapItem[][];
 }
 
 const tempGameList = [
