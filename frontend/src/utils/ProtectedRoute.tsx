@@ -1,9 +1,9 @@
-import {Link, Navigate, Outlet} from "react-router-dom";
+import {Navigate, Outlet} from "react-router-dom";
 import { useAuth } from "./AuthProvider"
-import React, {ReactNode} from "react";
+import React from "react";
 
 export function ProtectedRoute(){
-    const { user } = useAuth();
+    const { user, logout} = useAuth();
     if (!user) {
         // user is not authenticated
         return <Navigate to="/" />;
@@ -11,10 +11,23 @@ export function ProtectedRoute(){
     return (
         <div>
             <header>
-                <nav className={'bg-red-900 text-white w-full text-7xl h-24'}>
-                    <span>Volcano Explorer</span>
-                    <Link to={"/app/menu"}>Menu</Link>
-                    <span>{`${user.name}`}</span>
+                <nav className={'text-white w-full text-5xl bg-gradient-to-b from-red-900 to-red-700 pb-2 px-2'}>
+                    <div className={"flex justify-between"}>
+                        <span>Volcano Explorer</span>
+                        <button onClick={logout}>Logout</button>
+                    </div>
+                    <div className={"grid grid-flow-col"}>
+                        <span className={"col-span-8"}>{`${user.name}`}</span>
+                        <div className={"flex justify-between pr-3"}>
+                            <span>Wins: </span>
+                            <span className={""}>{`${user.won}`}</span>
+                        </div>
+                        <div className={"flex justify-between"}>
+                            <span>Losses: </span>
+                            <span className={""}>{`${user.loss}`}</span>
+                        </div>
+
+                    </div>
                 </nav>
             </header>
             <Outlet />
