@@ -29,6 +29,10 @@ export default function LandingPage() {
     const {user} = useAuth()
     const navigate = useNavigate()
 
+    if (user) {
+        return <Navigate to="/app/menu" />;
+    }
+
     return (
         <div>
             <div className={"text-8xl text-center pb-5 mb-1 font-semibold"}>Volcano Explorer</div>

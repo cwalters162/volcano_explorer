@@ -34,7 +34,6 @@ AuthRouter.post("/login", async (req: Request, res: Response) => {
         if (result instanceof User) {
             req.session.regenerate(() => {
                 req.session.user = result
-
                 req.session.save(() => {
                     res.status(200).json(result)
                 })

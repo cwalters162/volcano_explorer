@@ -26,11 +26,6 @@ app.use(cors({
 }))
 app.use(express.json())
 
-app.use((req, _res, next)=>{
-    console.log(req.session)
-    next()
-})
-
 app.all('/', (_req, res) => {
     res.sendFile("./static/index.html", {root: path.join(__dirname, '.')})
 });
