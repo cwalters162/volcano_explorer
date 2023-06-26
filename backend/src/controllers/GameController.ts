@@ -1,11 +1,11 @@
 import GameService, {ZEnumDifficultySchema} from "../services/GameService";
 import {z} from "zod";
-import GameState, {EGameStatus} from "../models/GameState";
+import GameState, {EGameStatus, IGameDescription} from "../models/GameState";
 import {TTile} from "../models/Tile";
 
 interface IGameController {
     createGame(playerId: number, createGameRequest: CreateGameRequest): Promise<Error | GameState>
-    getAllGamesByUserId(playerId: number): Promise<Error | number[]>
+    getAllGamesByUserId(playerId: number): Promise<Error | IGameDescription[]>
     getGameStateByID(userId: number, gameId: number): Promise<Error | GameState>
     movePlayerInGameById(playerId: number, gameId: number, direction: string): Promise<Error | GameState>
     solveGameById(playerId: number, gameId: number): Promise<Error | TTile[]>
@@ -40,7 +40,7 @@ class GameController implements IGameController {
         }
     }
 
-    async getAllGamesByUserId(playerId: number): Promise<Error | number[]> {
+    async getAllGamesByUserId(playerId: number): Promise<Error | IGameDescription[]> {
         try {
             return this.gameService.getAllGamesByUserId(playerId)
         } catch {
@@ -102,9 +102,9 @@ class GameController implements IGameController {
 
 export const ZCreateGameRequestSchema = z.object({
     difficulty: ZEnumDifficultySchema,
-    size: z.number().optional(),
-    health: z.number().optional(),
-    moves: z.number().optional(),
+    size: z.coerce.number().optional(),
+    health: z.coerce.number().optional(),
+    moves: z.coerce.number().optional(),
 })
 
 export type CreateGameRequest = z.infer<typeof ZCreateGameRequestSchema>

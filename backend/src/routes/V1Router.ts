@@ -7,7 +7,7 @@ import GameState from "../models/GameState";
 import {TTile} from "../models/Tile";
 import {NODE_ENV} from "../configs/envConfig";
 
-V1Router.post("/creategame", async (req: Request, res: Response) => {
+V1Router.post("/create-game", async (req: Request, res: Response) => {
     const gameController = app.locals.gameController
     const userId = req.session.user!.id
     if (!userId) {

@@ -1,5 +1,5 @@
 import User from "../models/User";
-import GameState from "../models/GameState";
+import GameState, {IGameDescription} from "../models/GameState";
 import {TTile} from "../models/Tile";
 import {TPos} from "../services/GridMapService";
 import {IDatabaseRepository} from "../configs/DatabaseConfig";
@@ -59,9 +59,17 @@ class mockDBRepository implements IDatabaseRepository{
             return Error(`Could not find game: ${gameId}`)
         }
     }
-    getAllGameIdsByUserId(userId: number): number[] {
+    getAllGameIdsByUserId(userId: number): IGameDescription[] {
         const playerGames = this.gameState.filter(gs => gs.player_id === userId)
-        return playerGames.map(gs => gs.id)
+        return playerGames.map(gs => {
+            return {
+                id: gs.id,
+                health: gs.health,
+                moves: gs.moves,
+                game_status: gs.game_status,
+                size: gs.map.length
+            } as IGameDescription
+        })
     }
 
     createGameState(health: number, moves: number, player_id: number, start_location: TPos, gridMap: TTile[][]): GameState {

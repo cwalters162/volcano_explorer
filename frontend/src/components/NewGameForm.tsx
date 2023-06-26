@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {FormEvent, useState} from 'react';
 import {backend_port, backend_fqdn} from "../utils/env";
 
 enum Difficulty {
@@ -8,53 +8,34 @@ enum Difficulty {
     Custom = 'custom',
 }
 
-interface FormData {
+interface NewGameFormProps {
+    onSubmit: (formData: LoginFormData) => Promise<void>
+}
+
+ export interface LoginFormData {
     difficulty: Difficulty;
     size?: number;
     health?: number;
     moves?: number;
 }
 
-export default function NewGameForm() {
-    const [formData, setFormData] = useState<FormData>({
+export default function NewGameForm({onSubmit: handleSubmit}:NewGameFormProps) {
+    const [formData, setFormData] = useState<LoginFormData>({
         difficulty: Difficulty.Easy,
     });
 
     function handleChange (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) {
         const { name, value } = event.target;
-
+        console.log("Starting form data")
+        console.log(formData)
         setFormData(prevData => ({
             ...prevData,
             [name]: value,
         }));
     }
 
-    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        try {
-            const response = await fetch(`http://${backend_fqdn}:${backend_port}/api/creategame`, {
-                credentials: 'include',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({difficulty: "easy"}),
-            });
-
-            if (response.status == 200) {
-                const result = await response.json();
-                console.log(result)
-                console.log("Success:", result);
-            } else {
-                console.log(response)
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    }
-
     return (
-        <form className="max-w-sm mx-auto sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3 text-center" onSubmit={handleSubmit}>
+        <form className="max-w-sm mx-auto sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3 text-center">
             <div className="mb-4">
                 <label htmlFor="difficulty" className="block mb-2 font-medium">
                     Difficulty
@@ -84,7 +65,7 @@ export default function NewGameForm() {
                             id="size"
                             name="size"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                            value={formData.size || ''}
+                            value={formData.size || 0}
                             onChange={handleChange}
                         />
                     </div>
@@ -98,7 +79,7 @@ export default function NewGameForm() {
                             id="health"
                             name="health"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                            value={formData.health || ''}
+                            value={formData.health || 0}
                             onChange={handleChange}
                         />
                     </div>
@@ -112,7 +93,7 @@ export default function NewGameForm() {
                             id="moves"
                             name="moves"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                            value={formData.moves || ''}
+                            value={formData.moves || 0}
                             onChange={handleChange}
                         />
                     </div>
@@ -120,8 +101,9 @@ export default function NewGameForm() {
             )}
 
             <button
-                type="submit"
+                type="button"
                 className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+                onClick={() => handleSubmit(formData)}
             >
                 Submit
             </button>

@@ -1,4 +1,4 @@
-import GameState, {EGameStatus} from "../models/GameState";
+import GameState, {EGameStatus, IGameDescription} from "../models/GameState";
 import IDatabaseRepository from "../repositories/mockDBRepository"
 import TileService from "./TileService";
 import GridMapService from "./GridMapService";
@@ -8,7 +8,7 @@ import {aStar} from "../Utilites/PathFindingUtilites";
 
 interface IGameService {
     createGame(userId: number, size: number, health: number, moves: number): GameState
-    getAllGamesByUserId(userId: number): Error | number[]
+    getAllGamesByUserId(userId: number): Error | IGameDescription[]
     getGameStateById(userId: number, gameId: number): Error | GameState
     movePlayerInGameByID(playerId: number, gameId: number, direction: string): Error | GameState
     getGameSolutionById(gameId: number): Promise<Error | TTile[]>
@@ -30,7 +30,7 @@ class GameService implements IGameService {
         return this.db.createGameState(health, moves, userId, start_location, grid_map)
     }
 
-    getAllGamesByUserId(userId: number): Error | number[] {
+    getAllGamesByUserId(userId: number): Error | IGameDescription[] {
         const userExists = this.db.getUserByID(userId)
         if (userExists) {
             return this.db.getAllGameIdsByUserId(userId)

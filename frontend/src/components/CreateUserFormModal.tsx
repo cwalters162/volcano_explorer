@@ -30,8 +30,7 @@ export default function CreateUserFormModal() {
             if (response.status == 200) {
                 const result = await response.json();
                 console.log(result)
-                await login(result)
-                navigate("/app/menu")
+                setShowModal(false)
                 console.log("Success:", result);
             } else {
                 console.log(response)
