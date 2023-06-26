@@ -27,7 +27,6 @@ function Card({title, body, customCardStyle, customCardTitleStyle, customCardBod
 
 export default function LandingPage() {
     const {user} = useAuth()
-    const navigate = useNavigate()
 
     if (user) {
         return <Navigate to="/app/menu" />;

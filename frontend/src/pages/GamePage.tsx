@@ -3,6 +3,7 @@ import {useLocation} from "react-router-dom";
 import {GameData } from "./MenuPage";
 import {tempGameList} from "../mockData/gameDataArray";
 import useMoveCharacter from "../services/GameService";
+import {backend_url} from "../utils/env";
 
 export enum TileType {
     Blank,
@@ -23,10 +24,14 @@ export default function GamePage(){
     const [gameState, setGameState] = useState<GameData>()
 
     useEffect(() => {
-        const gameData = tempGameList.find((game)=> gameId === game.id)
-        if (gameData !== undefined) {
-            setGameState(gameData)
-        }
+        (async ()=> {
+            const response = await fetch(`${backend_url}/api/game/${gameId}`, {
+                method: "GET",
+                credentials: "include"
+            })
+            const result = await response.json()
+            setGameState(result)
+        })()
     }, []);
 
     function handleKeyPress(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -92,7 +97,11 @@ export default function GamePage(){
                                                         tile.type === TileType.Start ? 'bg-purple-500' : 
                                                             tile.type === TileType.End ? 'bg-black' : ''}`}
                                 >
-                                    {tile.x === gameState.player_location.x && tile.y === gameState.player_location.y && <span className="text-black">@</span>}
+                                    {tile.x === gameState.player_location.x &&
+                                        tile.y === gameState.player_location.y &&
+                                        <span className={`${tile.type===TileType.End ? 'text-white' : 'text-black'}`}
+                                        >@</span>
+                                    }
                                 </div>
                             ))
                         }

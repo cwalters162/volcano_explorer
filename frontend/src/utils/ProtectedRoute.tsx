@@ -1,13 +1,18 @@
-import {Navigate, Outlet} from "react-router-dom";
+import {matchRoutes, Navigate, Outlet, useLocation, useNavigate, useRoutes} from "react-router-dom";
 import { useAuth } from "./AuthProvider"
 import React from "react";
 
 export function ProtectedRoute(){
+    const location = useLocation()
     const { user, logout} = useAuth();
     if (!user) {
         // user is not authenticated
         return <Navigate to="/" />;
     }
+    if (location.pathname == "/app") {
+        return <Navigate to={"/app/menu"} />
+    }
+
     return (
         <div>
             <header>
