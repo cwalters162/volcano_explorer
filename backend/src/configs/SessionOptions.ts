@@ -12,11 +12,10 @@ function getSessionOptions(): SessionOptions {
     if (NODE_ENV === "development") {
         return {
             secret: SESSION_SECRET,
-            resave: true,
+            resave: false,
             saveUninitialized: true,
             cookie: {
                 secure: false,
-                httpOnly: false,
             }
         }
     } else {

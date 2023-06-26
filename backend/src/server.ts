@@ -21,7 +21,8 @@ import cors from "cors"
 
 app.use(session(SESSION_OPTIONS))
 app.use(cors({
-    origin: "http://localhost:3001",
+    origin: ['http://localhost:3001', 'http://localhost:3000', "http://localhost:3001/"],
+    methods: ['POST', "PUT", "GET", "DELETE"],
     credentials: true
 }))
 app.use(express.json())
