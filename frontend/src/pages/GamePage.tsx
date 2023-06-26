@@ -18,7 +18,7 @@ export enum TileType {
 
 export default function GamePage(){
     const location = useLocation()
-    const moveCharacter = useMoveCharacter()
+    const { moveCharacter } = useMoveCharacter()
     const gameId = location.state
     const [gameState, setGameState] = useState<GameData>()
 

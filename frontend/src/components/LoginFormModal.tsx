@@ -21,6 +21,7 @@ export default function LoginFormModal() {
         try {
             const response = await fetch(`http://${backend_fqdn}:${backend_port}/auth/login`, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },

@@ -32,8 +32,13 @@ AuthRouter.post("/login", async (req: Request, res: Response) => {
         const user = ZAuthUserRequestSchema.parse(req.body)
         let result = await authController.loginUser(user.name, user.password)
         if (result instanceof User) {
-            req.session.user = result
-            res.status(200).json(result)
+            req.session.regenerate(() => {
+                req.session.user = result
+
+                req.session.save(() => {
+                    res.status(200).json(result)
+                })
+            })
         } else {
             res.status(500).json({error: `${result}`})
         }

@@ -18,10 +18,18 @@ import GameController from "./controllers/GameController";
 import V1Router from "./routes/V1Router";
 import cors from "cors"
 
-app.use(cors())
-app.use(express.json())
-app.use(session(SESSION_OPTIONS))
 
+app.use(session(SESSION_OPTIONS))
+app.use(cors({
+    origin: "http://localhost:3001",
+    credentials: true
+}))
+app.use(express.json())
+
+app.use((req, _res, next)=>{
+    console.log(req.session)
+    next()
+})
 
 app.all('/', (_req, res) => {
     res.sendFile("./static/index.html", {root: path.join(__dirname, '.')})
