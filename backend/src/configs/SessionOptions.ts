@@ -15,7 +15,8 @@ function getSessionOptions(): SessionOptions {
             resave: false,
             saveUninitialized: true,
             cookie: {
-                secure: false,
+                secure: NODE_ENV !== "development", //If true breaks postman on local.
+                httpOnly: true
             }
         }
     } else {
