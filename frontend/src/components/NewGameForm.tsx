@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {backend_port, backend_url} from "../utils/env";
+import {backend_port, backend_fqdn} from "../utils/env";
 
 enum Difficulty {
     Easy = 'easy',
@@ -32,7 +32,7 @@ export default function NewGameForm() {
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         try {
-            const response = await fetch(`http://${backend_url}:${backend_port}/api/creategame`, {
+            const response = await fetch(`http://${backend_fqdn}:${backend_port}/api/creategame`, {
                 credentials: 'include',
                 method: 'POST',
                 headers: {

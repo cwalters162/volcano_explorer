@@ -2,7 +2,7 @@ import {json, Link, useNavigate} from "react-router-dom";
 import {Dispatch, SetStateAction, useState} from "react";
 import {User} from "../App";
 import {AuthProvider, useAuth} from "../utils/AuthProvider";
-import {backend_port, backend_url} from "../utils/env";
+import {backend_port, backend_fqdn} from "../utils/env";
 
 interface CreateUserInputObject {
     name: string,
@@ -19,7 +19,7 @@ export default function CreateUserFormModal() {
 
     async function handleCreate(): Promise<void> {
         try {
-            const response = await fetch(`http://${backend_url}:${backend_port}/auth/user`, {
+            const response = await fetch(`http://${backend_fqdn}:${backend_port}/auth/user`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

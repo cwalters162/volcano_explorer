@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {useLocation} from "react-router-dom";
-import {GameData, MapItem, PlayerLocation} from "./MenuPage"; // Import the TileType enum
+import {GameData } from "./MenuPage";
+import {tempGameList} from "../mockData/gameDataArray";
+import useMoveCharacter from "../services/GameService";
 
 export enum TileType {
     Blank,
@@ -12,44 +14,75 @@ export enum TileType {
     Player
 }
 
+
+
 export default function GamePage(){
-    const [map, setMap] = useState<MapItem[][]>([]);
-    const [playerLocation, setPlayerLocation] = useState<PlayerLocation>({x:0, y:0});
     const location = useLocation()
-    const gameData: GameData = location.state
+    const moveCharacter = useMoveCharacter()
+    const gameId = location.state
+    const [gameState, setGameState] = useState<GameData>()
 
-    const gameMap = gameData.map
-
-    console.log(gameMap)
     useEffect(() => {
-        // Update the map state when the data changes
-        setMap(gameMap);
-        setPlayerLocation(gameData.player_location)
+        const gameData = tempGameList.find((game)=> gameId === game.id)
+        if (gameData !== undefined) {
+            setGameState(gameData)
+        }
     }, []);
 
-    // const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    //     const { key } = event;
-    //
-    //     // Handle arrow key presses and update the map accordingly
-    //     // Replace the moved tile with the @ symbol
-    //
-    //     // Update the map state with the new map
-    //     setMap((prevMap) => {
-    //         // Perform necessary map updates based on key press
-    //
-    //         return updatedMap;
-    //     });
-    // };
+    function handleKeyPress(event: React.KeyboardEvent<HTMLDivElement>) {
+        const { key } = event
+        switch(key) {
+            case "w":
+            case "W":
+            case "ArrowUp": {
+                console.log("Arrow Up")
+                moveCharacter(gameId, "up").then((data) => {
+                    setGameState(data)
+                }).catch((error)=>{console.log(error)})
+                break;
+            }
+            case "s":
+            case "S":
+            case "ArrowDown": {
+                console.log("Arrow Down")
+                moveCharacter(gameId, "down").then((data) => {
+                    setGameState(data)
+                }).catch((error)=>{console.log(error)})
+                break;
+            }
+            case "a":
+            case "A":
+            case "ArrowLeft": {
+                console.log("Arrow Left")
+                moveCharacter(gameId, "left").then((data) => {
+                    setGameState(data)
+                }).catch((error)=>{console.log(error)})
+                break;
+            }
+            case "d":
+            case "D":
+            case "ArrowRight": {
+                console.log("Arrow Right")
+                moveCharacter(gameId, "right").then((data) => {
+                    setGameState(data)
+                }).catch((error)=>{console.log(error)})
+                break;
+            }
+        }
+    }
 
-    console.log(gameMap.length)
+    if (!gameState) {
+        return <div> NO GAME FOUND </div>
+    }
 
     return (
-        <div className="flex justify-center h-screen" tabIndex={0}>
-            <div className={`flex`}>
-                {map.map((row, rowIndex) =>
-                    <div>
+        <div className="flex justify-center h-screen" tabIndex={0} onKeyDown={(e)=>handleKeyPress(e)}>
+            <div className={`flex flex-col`}>
+                {gameState.map.map((row, rowIndex) =>
+                    <div key={`${rowIndex}`} className={"flex"}>
                         {row.map((tile, colIndex) => (
                                 <div
+                                    id={`${rowIndex}-${colIndex}`}
                                     key={`${rowIndex}-${colIndex}`}
                                     className={`text-center h-7 w-7 
                                         ${tile.type === TileType.Blank ? 'bg-green-500' : 
@@ -59,11 +92,7 @@ export default function GamePage(){
                                                         tile.type === TileType.Start ? 'bg-purple-500' : 
                                                             tile.type === TileType.End ? 'bg-black' : ''}`}
                                 >
-                                    {/* Render additional content if needed */}
-                                    {/*{tile.type === TileType.Start && <span className="text-white">Start</span>}*/}
-                                    {/*{tile.type === TileType.End && <span className="text-white">End</span>}*/}
-                                    {/* Render the @ symbol for the moved tile */}
-                                    {tile.x === playerLocation.x && tile.y === playerLocation.y && <span className="text-black">@</span>}
+                                    {tile.x === gameState.player_location.x && tile.y === gameState.player_location.y && <span className="text-black">@</span>}
                                 </div>
                             ))
                         }
