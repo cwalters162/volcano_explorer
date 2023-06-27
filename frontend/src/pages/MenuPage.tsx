@@ -2,8 +2,8 @@ import React, {useEffect, useState} from "react";
 import NewGameForm, {LoginFormData} from "../components/NewGameForm";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../utils/AuthProvider"
-import gameDescriptionsData from "../mockData/getGameDescriptions";
 import {backend_fqdn, backend_port, backend_url} from "../utils/env";
+import {useUI} from "../utils/UiProvider";
 
 export interface GameDescription {
     id: number,
@@ -13,23 +13,10 @@ export interface GameDescription {
     size: number,
 }
 
-
-interface newGameOptions {
-    difficulty: string, // easy, medium, hard, or custom.
-    size?: number, // optional used for custom.
-    health?: number, //  optional used for custom.
-    moves?: number // optional used for custom.
-}
-
-function getGameDescriptions(id: number) {
-    const result = gameDescriptionsData
-    return result
-}
-
 export default function MenuPage() {
     const {user} = useAuth()
-    const [newGameOptions, setNewGameOptions] = useState<newGameOptions>()
     const navigate = useNavigate()
+    const {setHealth, setMoves} = useUI()
     const [gameDescriptions, setGameDescriptions] = useState<GameDescription[]>([])
 
     useEffect( () => {
@@ -41,8 +28,11 @@ export default function MenuPage() {
             const result = await response.json()
             setGameDescriptions(result)
         })()
+    }, [])
 
-
+    useEffect( () => {
+        setHealth(0)
+        setMoves(0)
     }, [])
 
     async function handleSubmit(data: LoginFormData) {
