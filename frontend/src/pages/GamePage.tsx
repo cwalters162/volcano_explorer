@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {useLocation, useNavigate} from "react-router-dom";
-import {GameData } from "./MenuPage";
-import useMoveCharacter from "../services/GameService";
-import {backend_url} from "../utils/env";
-import {useUI} from "../utils/UiProvider";
+import React, { useEffect, useState, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { GameData } from './MenuPage';
+import useMoveCharacter from '../services/GameService';
+import { backend_url } from '../utils/env';
+import { useUI } from '../utils/UiProvider';
 
 export enum TileType {
     Blank,
@@ -23,6 +23,7 @@ export default function GamePage(){
     const gameId = location.state
     const [gameState, setGameState] = useState<GameData>()
     const [gameStatus, setGameStatus] = useState<string>("")
+    const playerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         (async ()=> {
@@ -43,6 +44,12 @@ export default function GamePage(){
             setMoves(gameState.moves);
         }
     }, [gameState, setHealth, setMoves]);
+
+    useEffect(() => {
+        if (playerRef.current) {
+            playerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+        }
+    }, [gameState]);
 
     function handleKeyPress(event: React.KeyboardEvent<HTMLDivElement>) {
         const { key } = event
@@ -94,7 +101,7 @@ export default function GamePage(){
 
     return (
         <>
-            <div className="flex justify-center h-screen" tabIndex={0} onKeyDown={(e)=>handleKeyPress(e)}>
+            <div className="flex justify-center h-[calc(100vh-104px)] overflow-scroll" tabIndex={0} onKeyDown={(e)=>handleKeyPress(e)}>
                 <div className={`flex flex-col`}>
                     {gameState.map.map((row, rowIndex) =>
                         <div key={`${rowIndex}`} className={"flex"}>
@@ -112,8 +119,9 @@ export default function GamePage(){
                                     >
                                         {tile.x === gameState.player_location.x &&
                                             tile.y === gameState.player_location.y &&
-                                            <span className={`${tile.type===TileType.End || tile.type === TileType.Mud ? 'text-white' : 'text-black'}`}
-                                            >@</span>
+                                            <span className={`${tile.type===TileType.End || tile.type === TileType.Mud ? 'text-white' : 'text-black'}`} ref={playerRef}>
+                                                @
+                                            </span>
                                         }
                                     </div>
                                 ))

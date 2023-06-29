@@ -91,7 +91,7 @@ export default function MenuPage() {
                                 onClick={() => onItemClick(gameDescription)}
                             >
                                 <div className="font-medium">Game ID: {gameDescription.id}</div>
-                                <div className="font-medium">Health: {gameDescription.health}</div>
+                                <div className="font-medium">: {gameDescription.health}</div>
                                 <div className="font-medium">Moves: {gameDescription.moves}</div>
                                 <div className="font-medium">Size: {gameDescription.size}</div>
                             </li>

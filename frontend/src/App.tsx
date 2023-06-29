@@ -14,7 +14,7 @@ import {ProtectedRoute} from "./utils/ProtectedRoute";
     loss: number
 }
 
-function App() {
+export default function App() {
   return (
     <div className="bg-gray-100 fixed top-0 bottom-0 right-0 left-0">
         <Routes>
@@ -30,4 +30,4 @@ function App() {
   );
 }
 
-export default App;
+
